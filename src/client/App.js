@@ -6,17 +6,22 @@ export default class App extends Component {
   state = { username: null };
 
   componentDidMount() {
-    fetch('/api/getUsername')
-      .then(res => res.json())
-      .then(user => this.setState({ username: user.username }));
+    fetch('/api', {method: 'get'})
+      .then(res => {
+        return res.text();
+      })
+      .then(result => {
+        console.log('we are getting back response' , result)
+      })
+      // .then(user => this.setState({ username: user.username }))
+      .catch(e => console.log('e',e));
   }
 
   render() {
     const { username } = this.state;
     return (
       <div>
-        {username ? <h1>{`Hello ${username}`}</h1> : <h1>Loading.. please wait!</h1>}
-        <img src={ReactImage} alt="react" />
+        HIs
       </div>
     );
   }
