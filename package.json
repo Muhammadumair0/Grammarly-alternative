@@ -18,8 +18,11 @@
     "babel-polyfill": "^6.26.0",
     "cors": "^2.8.5",
     "express": "^4.16.3",
+    "pg-promise": "^10.4.3",
     "react": "^16.5.2",
-    "react-dom": "^16.5.2"
+    "react-dom": "^16.5.2",
+    "simple-spellchecker": "^1.0.0",
+    "spell-checker-js": "^1.2.6"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
