@@ -3,9 +3,9 @@ const pgDB = require('./pg/pg-connection');
 
 
 
-function getWordSuggestion(misspelledWords) {
+function getWordSuggestion(misspelledWords:any) {
 
-    misspelledWords = misspelledWords.map(misspelledWord => {
+    misspelledWords = misspelledWords.map((misspelledWord:any) => {
         return '%'+misspelledWord.toLowerCase()+'%';
     })
 
@@ -17,9 +17,9 @@ function getWordSuggestion(misspelledWords) {
     return pgDB.any(query);
 }
 
-function getAllMatchingWords(text) {
+function getAllMatchingWords(text:any) {
 
-    let words = splitTextToArray(text).map(word => word.toLowerCase()).join("','");
+    let words = splitTextToArray(text).map((word:any) => word.toLowerCase()).join("','");
 
     let query = "SELECT * FROM"
               + " json_array_elements((SELECT dictionary_json->'words' from dictionary)::json) AS elem"
@@ -29,7 +29,7 @@ function getAllMatchingWords(text) {
 
 }
 
-function splitTextToArray(text) {
+function splitTextToArray(text:any) {
     return text.trim().split(" ");
 }
 

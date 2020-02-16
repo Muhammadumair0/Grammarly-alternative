@@ -1,20 +1,12 @@
-const express = require('express');
-const os = require('os');
-const cors = require('cors');
-const bodyParser = require("body-parser");
-const app = express();
-const { getWordSuggestion, getAllMatchingWords } = require('./dictionary-model');
-const stringSimilarity = require('string-similarity');
+import * as express from 'express';
 
+const router = express.Router();
+const fuzz = require('fuzzball');
 const specialCharaters = /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+const { getWordSuggestion, getAllMatchingWords } = require('./dictionary-model.ts');
 
-app.use(cors());
-app.use(bodyParser.json());
-app.use(express.static('dist'));
-
-app.post('/api/find-replaceable-words', (req, res) =>  {
-
-    let responseObject = {
+router.post('api/find-replaceable-words', (req, res, next) => {    
+    let responseObject:any = {
         success: true,
         body: {
             originalText: '',
@@ -26,34 +18,37 @@ app.post('/api/find-replaceable-words', (req, res) =>  {
 
     let { originalText } = req.body;
     originalText = originalText.replace(/["']/g, "").replace(/[^a-zA-Z ]/g, "").trim();
-    let misspelledWords = [];
-    let misspelledWordsWithSuggestion = [];
-    let modifiedText = originalText;
-    let words = splitTextToArray(originalText);
-    getAllMatchingWords(originalText).then(result => {
-        let foundWords = result.map(values => values.value).map(words => words.word);
-        words.forEach(word => {
+    let misspelledWords:any = [];
+    let misspelledWordsWithSuggestion:any = [];
+    let modifiedText:any = originalText;
+    let words:any = splitTextToArray(originalText);
+    getAllMatchingWords(originalText).then((result:any) => {
+        let foundWords = result.map((values:any) => values.value).map((words:any) => words.word);
+        words.forEach((word:any) => {
             if(!foundWords.includes(word.toLowerCase()) && !specialCharaters.test(word)) {
                 misspelledWords.push(word);
             }
         })
         if(misspelledWords.length > 0) {
             //replace misspelled words and return updated text
-            getWordSuggestion(misspelledWords).then(result => {
-                let suggestedWords = result.map(values => values.value).map(words => words.word);
+            getWordSuggestion(misspelledWords).then((result:any) => {
+                let suggestedWords = result.map((values:any) => values.value).map((words:any) => words.word);
                 if(suggestedWords.length > 0) {
                     //words suggestion found
-                    misspelledWords.map(misspelledWord => {
-                        let matchedWord = stringSimilarity.findBestMatch(misspelledWord, suggestedWords).bestMatch.target;
-                        if(matchedWord) {
+                    misspelledWords.map((misspelledWord:any) => {
+                        // let matchedWord = stringSimilarity.findBestMatch(misspelledWord, suggestedWords);
+                        let matchedWord = fuzz.extract(misspelledWord, suggestedWords)[0];
+                        if(Object.keys(matchedWord).length) {
+                            // matchedWord = stringSimilarity.findBestMatch(misspelledWord, suggestedWords).bestMatch.target;
+                            matchedWord = matchedWord[0];
                             misspelledWordsWithSuggestion.push({
                                 misspelledWord,
                                 suggestedWord: matchedWord
                             })
                         }
                     })
-                    misspelledWords.map(misspelledWord => {
-                        let matchedSuggestedWord = misspelledWordsWithSuggestion.find(word => {
+                    misspelledWords.map((misspelledWord:any) => {
+                        let matchedSuggestedWord = misspelledWordsWithSuggestion.find((word:any) => {
                              return word.misspelledWord == misspelledWord;
                          })
                          modifiedText = modifiedText.replace(misspelledWord, matchedSuggestedWord.suggestedWord);
@@ -70,11 +65,11 @@ app.post('/api/find-replaceable-words', (req, res) =>  {
                     responseObject.body.message = 'No replaceable word(s) found';
                     res.send(responseObject);
                 }
-            }).catch(e => {
+            }).catch((e:any) => {
                 responseObject.success = false;
                 responseObject.body.message = e;
                 res.send(responseObject);
-            }).catch(e => {
+            }).catch((e:any) => {
                 responseObject.success = false;
                 responseObject.body.message = e;
                 res.send(responseObject);
@@ -87,8 +82,8 @@ app.post('/api/find-replaceable-words', (req, res) =>  {
     })
 });
 
-function splitTextToArray(text) {
+function splitTextToArray(text:any) {
     return text.split(" ");
 }
 
-app.listen(process.env.PORT || 8080, () => console.log(`Listening on port ${process.env.PORT || 8080}!`));
+export default router;

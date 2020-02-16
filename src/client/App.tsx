@@ -1,27 +1,22 @@
 import React, { Component } from 'react';
 const fileDownload = require('js-file-download');
-import './app.css';
+import './scss/app.scss';
 
-export default class App extends Component {
-  state = { originalText: '', apiOriginalText: '',modifiedText: '', misspelledWords: [], submitToggle: false, message: '' };
 
+interface IAppState {
+	name: string;
+}
+export default class App extends Component<any,any> {
+	constructor(props: IAppState) {
+		super(props);
+		this.state = { originalText: '', apiOriginalText: '',modifiedText: '', misspelledWords: [], submitToggle: false, message: '' };
+	}
   componentDidMount() {
   }
 
   submit = () => {
     this.setState({ submitToggle: true }, () => {
-      fetch('/api/find-replaceable-words', {
-        method: 'POST',
-        mode: 'cors',
-        cache: 'no-cache',
-        credentials: 'same-origin',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        redirect: 'follow',
-        referrerPolicy: 'no-referrer',
-        body: JSON.stringify({ originalText: this.state.originalText }) 
-      })
+      fetch('/api/find-replaceable-words')
           .then(res => {
             this.setState({ submitToggle: false })
             return res.json();
@@ -70,7 +65,7 @@ export default class App extends Component {
         <h2 className={"headerHeading"}>Spell checker</h2>
         <div>
           <textarea className={"textArea"} value={originalText} 
-              onChange={(event) => this.setState({ originalText: event.target.value })} rows="30" cols="100">
+              onChange={(event) => this.setState({ originalText: event.target.value })} rows={30} cols={100}>
           </textarea>
         </div>
         <div className={"buttonsDiv"}>
