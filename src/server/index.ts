@@ -16,8 +16,12 @@ app.post('/api/find-replaceable-words', (req, res) =>  {
 
     let responseObject = {
         success: true,
-        body: null,
-        message: ''
+        body: {
+            originalText: '',
+            modifiedText: '',
+            misspelledWords: [],
+            message: ''
+        }
     }
 
     let { originalText } = req.body;
@@ -63,41 +67,21 @@ app.post('/api/find-replaceable-words', (req, res) =>  {
                      res.send(responseObject);
                 } else {
                     //no suggestion found
-                    responseObject.body = {
-                        originalText: '',
-                        modifiedText: '',
-                        misspelledWords: [],
-                        message: 'No replaceable word(s) found'
-                    };
+                    responseObject.body.message = 'No replaceable word(s) found';
                     res.send(responseObject);
                 }
             }).catch(e => {
-                responseObject.body = {
-                    success: false,
-                    originalText: '',
-                    modifiedText: '',
-                    misspelledWords: [],
-                    message: e
-                };
+                responseObject.success = false;
+                responseObject.body.message = e;
                 res.send(responseObject);
             }).catch(e => {
-                responseObject.body = {
-                    success: false,
-                    originalText: '',
-                    modifiedText: '',
-                    misspelledWords: [],
-                    message: e
-                };
+                responseObject.success = false;
+                responseObject.body.message = e;
                 res.send(responseObject);
             });
         } else {
             //no misspelled word found in the text
-            responseObject.body = {
-                originalText: '',
-                modifiedText: '',
-                misspelledWords: [],
-                message: 'No misspelled word found in the text!'
-            };
+            responseObject.body.message = 'No misspelled word found in the text!';
             res.send(responseObject);
         }
     })
