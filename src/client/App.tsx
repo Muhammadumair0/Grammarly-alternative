@@ -16,7 +16,18 @@ export default class App extends Component<any,any> {
 
   submit = () => {
     this.setState({ submitToggle: true }, () => {
-      fetch('/api/find-replaceable-words')
+      fetch('/api/find-replaceable-words', {
+        method: 'POST',
+        mode: 'cors',
+        cache: 'no-cache',
+        credentials: 'same-origin',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
+        body: JSON.stringify({ originalText: this.state.originalText }) 
+      })
           .then(res => {
             this.setState({ submitToggle: false })
             return res.json();
