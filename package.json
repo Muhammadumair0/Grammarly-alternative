@@ -4,10 +4,12 @@
   "description": "reate a web service that takes a text document and returns a list of misspelled words (English). The service should prompt the user and ask if it should correct them, if the user accepts, the service should return a new file with the corrected spelling.",
   "main": "dist/server.js",
   "scripts": {
+    "heroku-prebuild": "npm install --dev",
     "watch:build": "npx webpack -w",
-    "watch:server": "nodemon dist/server.js",
+    "watch:server": "nodemon src/server/server.js",
     "dev": "npm-run-all --parallel watch:*",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "heroku-postbuild": "webpack -p"
   },
   "keywords": [],
   "author": "Muhammad Umair Khan",
