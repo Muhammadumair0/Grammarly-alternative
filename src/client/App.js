@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
+const fileDownload = require('js-file-download');
 import './app.css';
 
 export default class App extends Component {
-  state = { originalText: '', apiOriginalText: '',modifiedText: '', misspelledWords: [], submitToggle: false };
+  state = { originalText: '', apiOriginalText: '',modifiedText: '', misspelledWords: [], submitToggle: false, message: '' };
 
   componentDidMount() {
   }
 
   submit = () => {
     this.setState({ submitToggle: true }, () => {
-      fetch('/api', {
+      fetch('/api/find-replaceable-words', {
         method: 'POST',
         mode: 'cors',
         cache: 'no-cache',
@@ -29,17 +30,18 @@ export default class App extends Component {
             this.setState({
               modifiedText: result.body.modifiedText,
               apiOriginalText: result.body.originalText,
-              misspelledWords: result.body.misspelledWords
+              misspelledWords: result.body.misspelledWords,
+              message: result.body.message
             }, () => {
               if(this.state.misspelledWords.length) {
-                let dialogAnswer = confirm(`Following are misspelled words found in your text:\n${this.state.misspelledWords.toString()}.\nDo you want to update the text ?`);
+                let dialogAnswer = confirm(this.state.message);
                 if(dialogAnswer) {
                   this.setState({
                     originalText: this.state.modifiedText
                   })
                 }
               } else {
-                alert('No misspelled word found in your text!');
+                alert(this.state.message);
               }
             })
           })
@@ -57,6 +59,10 @@ export default class App extends Component {
     }
   }
 
+  downloadFile = () => {
+    fileDownload(this.state.modifiedText, 'filename.txt');
+  }
+
   render() {
     const { originalText, submitToggle } = this.state;
     return (
@@ -71,8 +77,11 @@ export default class App extends Component {
           <button className={"submitButton"} disabled={submitToggle} onClick={this.submit}>
             Submit
           </button>
-          <button className={"undoButton"} onClick={this.undo}>
+          {/* <button className={"undoButton"} onClick={this.undo}>
             Undo
+          </button> */}
+          <button disabled={this.state.misspelledWords.length ? false: true} className={"downloadButton"} onClick={this.downloadFile}>
+            Download File (.txt)
           </button>
           </div>
       </div>
