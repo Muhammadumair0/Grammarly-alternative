@@ -5,7 +5,7 @@ const fuzz = require('fuzzball');
 const specialCharaters = /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
 const { getWordSuggestion, getAllMatchingWords } = require('./dictionary-model.ts');
 
-router.post('api/find-replaceable-words', (req, res, next) => {    
+router.post('/api/find-replaceable-words', (req, res, next) => {    
     let responseObject:any = {
         success: true,
         body: {
