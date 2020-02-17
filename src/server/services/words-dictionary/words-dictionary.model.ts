@@ -1,9 +1,9 @@
-const pgDB = require('./pg/pg-connection');
+const pgDB = require('../../pg/pg-connection');
 
 
+export class DictionaryModel {
 
-
-function getWordSuggestion(misspelledWords:any) {
+static getWordSuggestion(misspelledWords:any) {
 
     misspelledWords = misspelledWords.map((misspelledWord:any) => {
         return '%'+misspelledWord.toLowerCase()+'%';
@@ -17,7 +17,7 @@ function getWordSuggestion(misspelledWords:any) {
     return pgDB.any(query);
 }
 
-function getAllMatchingWords(text:any) {
+static getAllMatchingWords(text:any) {
 
     let words = splitTextToArray(text).map((word:any) => word.toLowerCase()).join("','");
 
@@ -29,11 +29,8 @@ function getAllMatchingWords(text:any) {
 
 }
 
-function splitTextToArray(text:any) {
-    return text.trim().split(" ");
 }
 
-module.exports = {
-    getWordSuggestion,
-    getAllMatchingWords
+function splitTextToArray(text:any) {
+    return text.trim().split(" ");
 }
