@@ -1,11 +1,21 @@
 const fuzz = require('fuzzball');
 const specialCharaters = /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
 import { DictionaryModel } from './words-dictionary.model';
+import * as express from 'express';
 
+interface ResponseObject {
+    success: Boolean;
+    body: {
+        originalText: String,
+        modifiedText: String,
+        misspelledWords: String[],
+        message: String
+    };
+}
 export class WordsDictionaryController {
 
-    static replaceMisspelledWords(req:any, res:any) {
-        let responseObject:any = {
+    static replaceMisspelledWords(req:express.Request, res:express.Response) {
+        let responseObject: ResponseObject = {
             success: true,
             body: {
                 originalText: '',

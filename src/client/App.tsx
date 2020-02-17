@@ -9,7 +9,7 @@ interface IAppState {
 export default class App extends Component<any,any> {
 	constructor(props: IAppState) {
 		super(props);
-		this.state = { originalText: '', apiOriginalText: '',modifiedText: '', misspelledWords: [], submitToggle: false, message: '' };
+		this.state = { originalText: '', apiOriginalText: '',modifiedText: '', misspelledWords: [], submitToggle: false, message: '', downloadButtonToggle: true };
 	}
   componentDidMount() {
   }
@@ -43,7 +43,8 @@ export default class App extends Component<any,any> {
                 let dialogAnswer = confirm(this.state.message);
                 if(dialogAnswer) {
                   this.setState({
-                    originalText: this.state.modifiedText
+                    originalText: this.state.modifiedText,
+                    downloadButtonToggle: false
                   })
                 }
               } else {
@@ -86,7 +87,7 @@ export default class App extends Component<any,any> {
           {/* <button className={"undoButton"} onClick={this.undo}>
             Undo
           </button> */}
-          <button disabled={this.state.misspelledWords.length ? false: true} className={"downloadButton"} onClick={this.downloadFile}>
+          <button disabled={this.state.downloadButtonToggle} className={"downloadButton"} onClick={this.downloadFile}>
             Download File (.txt)
           </button>
           </div>
