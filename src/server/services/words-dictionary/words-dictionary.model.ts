@@ -1,4 +1,4 @@
-const pgDB = require('../../pg/pg-connection');
+import { pgDB } from '../../pg/pg-connection';
 
 
 export class DictionaryModel {

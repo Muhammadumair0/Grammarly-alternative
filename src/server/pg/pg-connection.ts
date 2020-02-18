@@ -14,4 +14,4 @@ const cn = {
     }
 };
 
-module.exports =  pgp(cn);
+export const pgDB = pgp(cn);

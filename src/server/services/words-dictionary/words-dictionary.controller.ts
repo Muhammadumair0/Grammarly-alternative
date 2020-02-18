@@ -1,7 +1,8 @@
-const fuzz = require('fuzzball');
-const specialCharaters = /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
 import { DictionaryModel } from './words-dictionary.model';
 import * as express from 'express';
+
+const fuzz = require('fuzzball');
+const specialCharaters = /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
 
 interface ResponseObject {
     success: Boolean;
@@ -26,7 +27,7 @@ export class WordsDictionaryController {
         }
     
         let { originalText } = req.body;
-        originalText = originalText.replace(/["']/g, "").replace(/[^a-zA-Z ]/g, "").trim();
+        originalText = originalText.replace(/["']/g, "").trim();
         let misspelledWords:any = [];
         let misspelledWordsWithSuggestion:any = [];
         let modifiedText:any = originalText;
