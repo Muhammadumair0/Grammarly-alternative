@@ -28,10 +28,10 @@ export class WordsDictionaryController {
     
         let { originalText } = req.body;
         originalText = originalText.replace(/["']/g, "").trim();
-        let misspelledWords:any = [];
-        let misspelledWordsWithSuggestion:any = [];
-        let modifiedText:any = originalText;
-        let words:any = splitTextToArray(originalText);
+        let misspelledWords:string[] = [];
+        let misspelledWordsWithSuggestion:any[] = [];
+        let modifiedText:string = originalText;
+        let words:string[] = splitTextToArray(originalText);
         DictionaryModel.getAllMatchingWords(originalText).then((result:any) => {
             let foundWords = result.map((values:any) => values.value).map((words:any) => words.word);
             words.forEach((word:any) => {
