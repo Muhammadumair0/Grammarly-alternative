@@ -5,7 +5,7 @@ export class DictionaryModel {
 
 static getWordSuggestion(misspelledWords:any) {
 
-    misspelledWords = misspelledWords.map((misspelledWord:any) => {
+    misspelledWords = misspelledWords.map((misspelledWord:string) => {
         return '%'+misspelledWord.toLowerCase()+'%';
     })
 
@@ -17,9 +17,9 @@ static getWordSuggestion(misspelledWords:any) {
     return pgDB.any(query);
 }
 
-static getAllMatchingWords(text:any) {
+static getAllMatchingWords(text:string) {
 
-    let words = splitTextToArray(text).map((word:any) => word.toLowerCase()).join("','");
+    let words = splitTextToArray(text).map((word:string) => word.toLowerCase()).join("','");
 
     let query = "SELECT * FROM"
               + " json_array_elements((SELECT dictionary_json->'words' from dictionary)::json) AS elem"
@@ -31,6 +31,6 @@ static getAllMatchingWords(text:any) {
 
 }
 
-function splitTextToArray(text:any) {
+function splitTextToArray(text:string) {
     return text.trim().split(" ");
 }
