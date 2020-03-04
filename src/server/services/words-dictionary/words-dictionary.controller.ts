@@ -34,7 +34,7 @@ export class WordsDictionaryController {
             })
             if(misspelledWords.length > 0) {
                 //replace misspelled words and return updated text
-                DictionaryModel.getWordSuggestion(misspelledWords).then((result:MatchingWord[]) => {
+                DictionaryModel.getWordSuggestionV2(misspelledWords).then((result:MatchingWord[]) => {
                     let suggestedWords = result.map((values:MatchingWord) => values.value).map((words:WordObject) => words.word);
                     if(suggestedWords.length > 0) {
                         //words suggestion found
